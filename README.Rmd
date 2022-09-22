@@ -36,23 +36,27 @@ This is a basic example which shows you how to solve a common problem:
 ```{r example}
 library(ModelOptimizationIR)
 
-library(IRon)
 library(dplyr)
 library(rpart)
-library(treeClust)
+library(IRon)
 
 data("NO2Emissions")
 
 n <- nrow(NO2Emissions)
 s <- sample(1:n, size = n*0.8)
 
-
 formula <- LNO2 ~ .
-train <- NO2Emissions %>% dplyr::slice(s)
-test <- NO2Emissions %>% dplyr::slice(-s)
+train <- NO2Emissions %>% slice(s)
+test <- NO2Emissions %>% slice(-s)
 
-maxIter <- 50
+trues <- train$LNO2
+phi <- phi(trues)
+steps <- seq(0, 1, 0.001)
+sigmas <- sigma(phi, steps)
 
-res <- SERAGradientTreeBoost(formula, train, test, maxIter=maxIter)
-res
+model <- rpart(formula, train)
+preds <- predict(model, test)
+
+sera <- sera_numerical(trues, preds, sigmas)
+sera
 ```

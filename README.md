@@ -3,11 +3,6 @@
 
 # ModelOptimizationIR
 
-<!-- badges: start -->
-<!-- badges: end -->
-
-The goal of ModelOptimizationIR is to …
-
 ## Installation
 
 You can install the development version of ModelOptimizationIR like so:
