@@ -15,11 +15,6 @@ knitr::opts_chunk$set(
 
 # ModelOptimizationIR
 
-<!-- badges: start -->
-<!-- badges: end -->
-
-The goal of ModelOptimizationIR is to ...
-
 ## Installation
 
 You can install the development version of ModelOptimizationIR like so:
@@ -31,7 +26,7 @@ devtools::install_github(anibalsilva1/ModelOptimizationIR)
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Usage example on SERA evaluation:
 
 ```{r example}
 library(ModelOptimizationIR)

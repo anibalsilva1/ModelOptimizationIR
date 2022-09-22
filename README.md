@@ -3,11 +3,6 @@
 
 # ModelOptimizationIR
 
-<!-- badges: start -->
-<!-- badges: end -->
-
-The goal of ModelOptimizationIR is to …
-
 ## Installation
 
 You can install the development version of ModelOptimizationIR like so:
@@ -19,7 +14,7 @@ devtools::install_github(anibalsilva1/ModelOptimizationIR)
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Usage example on SERA evaluation:
 
 ``` r
 library(ModelOptimizationIR)
@@ -62,5 +57,5 @@ preds <- predict(model, test)
 
 sera <- sera_numerical(trues, preds, sigmas)
 sera
-#> [1] 155.7345
+#> [1] 142.1627
 ```
