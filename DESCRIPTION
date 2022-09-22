@@ -1,10 +1,14 @@
 Package: ModelOptimizationIR
-Title: What the Package Does (One Line, Title Case)
+Title: Model Optimization in Imbalanced Regression using SERA
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("Aníbal", "Silva", , "anibalferreiraesilva@gmail.com", role = "aut",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Rita", "Ribeiro", , "rpribeiro@fc.up.pt", role = "cre",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person("Nuno", "Moniz", , "nmmoniz@inesctec.pt", role = "cre",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This package provides several tools to evaluate SERA as an optimization loss function in Boosting algorithms.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -20,3 +24,5 @@ Imports:
   treeClust,
   performanceEstimation,
   magrittr
+URL: https://github.com/anibalsilva1/ModelOptimizationIR
+BugReports: https://github.com/anibalsilva1/ModelOptimizationIR/issues
