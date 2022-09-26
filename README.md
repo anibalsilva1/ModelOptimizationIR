@@ -62,12 +62,13 @@ sigma <- sigma(phi, steps)
 
 sera_num <- sera_numerical(trues=trues, preds=preds, sigmas=sigma)
 sera_num
-#> [1] 13.68711
+#> [1] 6.100619
 
+# Compare with SERA evaluated from trapezoidal rule
 sera_trap <- sera(trues=trues, preds=preds, phi.trues=phi)
 sera_trap
 #>    preds 
-#> 13.68711
+#> 6.100619
 ```
 
 ## Citation
