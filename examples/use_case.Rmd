@@ -2,7 +2,7 @@
 title: "Example of how to use XGBoost optimized with SERA"
 #author: "Aníbal Silva"
 #date: "`r Sys.Date()`"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
