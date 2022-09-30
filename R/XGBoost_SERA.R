@@ -123,6 +123,8 @@ XGBoost.sera <- function(formula,
   X_test <- data.matrix(dplyr::select(test, -target))
   label_test <- dplyr::pull(test, target)
 
+  start_train_time <- Sys.time()
+
   #Validation checks
   if(is.null(sigma)){
     warning("weights were not provided. They were generated automatically.")
@@ -149,7 +151,6 @@ XGBoost.sera <- function(formula,
   xgb_dtrain <- xgboost::xgb.DMatrix(data = X_train, label = label_train, weight=sigma)
   xgb_dtest <- xgboost::xgb.DMatrix(data = X_test, label = label_test)
 
-  start_train_time <- Sys.time()
 
   model <- xgboost::xgboost(
     params = params,
@@ -159,13 +160,13 @@ XGBoost.sera <- function(formula,
     ...
   )
 
+  end_train_time <- Sys.time()
+
+  start_test_time <- Sys.time()
+
   preds <- stats::predict(model, xgb_dtest)
 
   end_test_time <- Sys.time()
-
-
-  end_train_time <- Sys.time()
-  start_test_time <- Sys.time()
 
   train_time <- as.numeric(difftime(end_train_time, start_train_time, units = "sec"))
   test_time <- as.numeric(difftime(end_test_time, start_test_time, units = "sec"))

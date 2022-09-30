@@ -125,6 +125,8 @@ LGBM.sera <- function(formula,
   X_test <- data.matrix(dplyr::select(test, -target))
   label_test <- dplyr::pull(test, target)
 
+  start_train_time <- Sys.time()
+
   # Validation checks
   if(is.null(sigma)){
     warning("weights were not provided. They were generated automatically.")
@@ -150,7 +152,7 @@ LGBM.sera <- function(formula,
 
   lgb_dtrain <- lightgbm::lgb.Dataset(data = X_train, label = label_train, weight=sigma)
 
-  start_train_time <- Sys.time()
+
 
   model <- lightgbm::lightgbm(
     params = params,
@@ -160,12 +162,13 @@ LGBM.sera <- function(formula,
     ...
   )
 
+  end_train_time <- Sys.time()
+
+  start_test_time <- Sys.time()
+
   preds <- stats::predict(model, X_test)
 
   end_test_time <- Sys.time()
-
-  end_train_time <- Sys.time()
-  start_test_time <- Sys.time()
 
   train_time <- as.numeric(difftime(end_train_time, start_train_time, units = "sec"))
   test_time <- as.numeric(difftime(end_test_time, start_test_time, units = "sec"))
