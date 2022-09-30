@@ -4,7 +4,7 @@
 \alias{wf.LGBM_SERA}
 \title{LGB(SERA)}
 \usage{
-wf.LGBM_SERA(formula, train, test, ...)
+wf.LGBM_SERA(formula, train, test, nrounds, ...)
 }
 \arguments{
 \item{formula}{A \code{formula} object.}
@@ -12,6 +12,8 @@ wf.LGBM_SERA(formula, train, test, ...)
 \item{train}{\code{data.frame} or \code{tibble} object with the training set.}
 
 \item{test}{\code{data.frame} or \code{tibble} object with the test set.}
+
+\item{nrounds}{A number. Number of boosters to train.}
 
 \item{...}{Additional parameters which can be passed into internal model.}
 }
@@ -22,7 +24,7 @@ A \code{list} containing trues, predictions and execution time (in seconds).
 Workflow for Light Gradient Boosting optimised with SERA.
 }
 \details{
-Calls \code{\link{lgbm.sera}} as \code{objective}.
+Calls \code{\link{custom.lgbm.sera}} as \code{objective}.
 }
 \examples{
 \dontrun{

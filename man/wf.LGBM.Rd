@@ -4,7 +4,7 @@
 \alias{wf.LGBM}
 \title{LGB}
 \usage{
-wf.LGBM(formula, train, test, ...)
+wf.LGBM(formula, train, test, nrounds, ...)
 }
 \arguments{
 \item{formula}{A \code{formula} object.}
@@ -12,6 +12,8 @@ wf.LGBM(formula, train, test, ...)
 \item{train}{\code{data.frame} or \code{tibble} object with the training set.}
 
 \item{test}{\code{data.frame} or \code{tibble} object with the test set.}
+
+\item{nrounds}{A number. Number of boosters to train.}
 
 \item{...}{Additional parameters which can be passed into internal model.}
 }
