@@ -6,7 +6,8 @@
 #' @param preds Numeric \code{vector} of predictions.
 #' @param dtrain \code{xgb.DMatrix} object.
 #'
-#' @return Returns a list containing the gradient and the hessian of SERA.
+#' @return Returns a \code{list with the following elements:
+#'
 #' @export
 #'
 #' @examples
@@ -15,7 +16,7 @@
 #' https://github.com/dmlc/xgboost/blob/master/R-package/demo/custom_objective.R
 #' @importFrom xgboost getinfo
 #' @importFrom IRon phi
-xgboost.sera <- function(preds, dtrain){
+custom.xgboost.sera <- function(preds, dtrain){
 
   s <- 0.001
   labels <- xgboost::getinfo(dtrain, "label")
@@ -28,8 +29,8 @@ xgboost.sera <- function(preds, dtrain){
   phi.trues <- IRon::phi(labels, phi.ctrl)
   sigmas <- sigma(phis=phi.trues, steps=step)
 
-  grad <- 2*sigmas*(preds-labels)
-  hess <- 2*sigmas
+  grad <- sigmas*(preds-labels)
+  hess <- sigmas
 
   return(list(grad = grad, hess = hess))
 }
@@ -52,7 +53,7 @@ xgboost.sera <- function(preds, dtrain){
 #' @importFrom IRon phi.control
 #' @importFrom IRon phi
 #' @examples
-lgbm.sera <- function(preds, dtrain){
+custom.lgbm.sera <- function(preds, dtrain){
 
   labels <- lightgbm::get_field(dtrain, "label")
 
@@ -65,8 +66,8 @@ lgbm.sera <- function(preds, dtrain){
   phi.trues <- IRon::phi(labels, phi.ctrl)
   sigmas <- sigma(phis=phi.trues, steps=step)
 
-  grad <- 2*sigmas*(preds-labels)
-  hess <- 2*sigmas
+  grad <- sigmas*(preds-labels)
+  hess <- sigmas
 
   return(list(grad = grad, hess = hess))
 }
