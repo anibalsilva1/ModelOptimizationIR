@@ -21,9 +21,6 @@ In this markdown two use cases are provided where three variants are taken into 
 
 The first use case uses a number of intervals $I=1000$, while the second $I=10$.
 
-Let us start.
-
-
 ### Load required packages
 
 ```{r, message=FALSE}
@@ -52,7 +49,8 @@ test <- NO2Emissions %>% dplyr::slice(-s)
 
 ```{r}
 y <- train$LNO2
-control.points <- matrix(c(1.1, 0, 0, 3.7, 0, 0, 5, 1, 0), byrow = TRUE, ncol=3) # Extreme points above upper fence.
+# Extreme points above upper fence.
+control.points <- matrix(c(1.1, 0, 0, 3.7, 0, 0, 5, 1, 0), byrow = TRUE, ncol=3) 
 
 ph.ctrl <- phi.control(y = y, method="range", control.pts = control.points)
 phi <- phi(y = y, phi.parms = ph.ctrl)
@@ -84,17 +82,39 @@ sigma <- sigma(phis = phi, steps = steps)
 ## Train the models and save results
 
 ```{r}
-model_domain_knowledge <- XGBoost.sera(formula = formula, train = train, test = test, sigma = sigma, nrounds = 250, parameters = params)
+model_domain_knowledge <-
+  XGBoost.sera(
+    formula = formula,
+    train = train,
+    test = test,
+    sigma = sigma,
+    nrounds = 250,
+    parameters = params
+  )
 
-model_auto <- XGBoost.sera(formula = formula, train = train, test = test, nrounds = 250, parameters = params)
+model_auto <-
+  XGBoost.sera(
+    formula = formula,
+    train = train,
+    test = test,
+    nrounds = 250,
+    parameters = params
+  )
 
-model_unweighted <- wf.XGBoost(formula = formula, train = train, test = test, nrounds = 250, params = params)
+model_unweighted <-
+  wf.XGBoost(
+    formula = formula,
+    train = train,
+    test = test,
+    nrounds = 250,
+    params = params
+  )
 
 df <- tibble(
-        trues = model_domain_knowledge$trues,
-        `auto` = model_auto$preds,
-        `domain knowledge` = model_domain_knowledge$preds,
-        `unweighted` = model_unweighted$preds
+  trues = model_domain_knowledge$trues,
+  `auto` = model_auto$preds,
+  `domain knowledge` = model_domain_knowledge$preds,
+  `unweighted` = model_unweighted$preds
 )
 ```
 
@@ -127,17 +147,40 @@ sigma <- sigma(phis = phi, steps = steps)
 ## Train the models and save results
 
 ```{r}
-model_domain_knowledge <- XGBoost.sera(formula = formula, train = train, test = test, sigma = sigma, nrounds = 250, parameters = params)
+model_domain_knowledge <-
+  XGBoost.sera(
+    formula = formula,
+    train = train,
+    test = test,
+    sigma = sigma,
+    nrounds = 250,
+    parameters = params
+  )
 
-model_auto <- XGBoost.sera(formula = formula, train = train, test = test, nrounds = 250, parameters = params, I=10)
+model_auto <-
+  XGBoost.sera(
+    formula = formula,
+    train = train,
+    test = test,
+    nrounds = 250,
+    parameters = params,
+    I = 10
+  )
 
-model_unweighted <- wf.XGBoost(formula = formula, train = train, test = test, nrounds = 250, params = params)
+model_unweighted <-
+  wf.XGBoost(
+    formula = formula,
+    train = train,
+    test = test,
+    nrounds = 250,
+    params = params
+  )
 
 df <- tibble(
-        trues = model_domain_knowledge$trues,
-        `domain knowledge` = model_domain_knowledge$preds,
-        `auto` = model_auto$preds,
-        `unweighted` = model_unweighted$preds
+  trues = model_domain_knowledge$trues,
+  `domain knowledge` = model_domain_knowledge$preds,
+  `auto` = model_auto$preds,
+  `unweighted` = model_unweighted$preds
 )
 ```
 
@@ -155,4 +198,5 @@ df %>%
   summarise(across(!matches("trues"), ~mean((trues - .x)^2)))
 ```
 
-Better generalization was achieved, but at the cost of worst predictive focus on extreme values.
+Better generalization was achieved, but at the cost of worst predictive focus on 
+extreme values.
