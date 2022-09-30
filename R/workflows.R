@@ -5,6 +5,7 @@
 #' @param formula \code{formula} object.
 #' @param train \code{data.frame} or \code{tibble} object with the training set.
 #' @param test \code{data.frame} or \code{tibble} object with the test set.
+#' @param nrounds A number. Number of boosters to train.
 #' @param ... Additional parameters which can be passed into internal model.
 #'
 #' @return A \code{list} containing trues, predictions and execution time (in seconds).
@@ -32,7 +33,7 @@
 #' res
 #' }
 
-wf.XGBoost <- function(formula, train, test, ...){
+wf.XGBoost <- function(formula, train, test, nrounds, ...){
 
   t <- formula[[2]]
 
@@ -49,7 +50,7 @@ wf.XGBoost <- function(formula, train, test, ...){
 
   m <- xgboost::xgboost(data = xgb_train,
                         verbose = 0,
-                        booster = "dart",
+                        nrounds = nrounds,
                         ...
   )
   end_train_time <- Sys.time()
@@ -80,12 +81,13 @@ wf.XGBoost <- function(formula, train, test, ...){
 #' @param formula A \code{formula} object.
 #' @param train \code{data.frame} or \code{tibble} object with the training set.
 #' @param test \code{data.frame} or \code{tibble} object with the test set.
+#' @param nrounds A number. Number of boosters to train.
 #' @param ... Additional parameters which can be passed into internal model.
 #'
 #' @return A \code{list} containing trues, predictions and execution time (in seconds).
 #' @export
 #'
-#' @details Calls \code{\link{xgboost.sera}} as \code{objective}.
+#' @details Calls \code{\link{custom.xgboost.sera}} as \code{objective}.
 #'
 #' @examples
 #' \dontrun{
@@ -111,7 +113,7 @@ wf.XGBoost <- function(formula, train, test, ...){
 #' res
 #' }
 
-wf.XGBoost_SERA <- function(formula, train, test,...){
+wf.XGBoost_SERA <- function(formula, train, test, nrounds=100, ...){
 
   t <- formula[[2]]
 
@@ -128,8 +130,8 @@ wf.XGBoost_SERA <- function(formula, train, test,...){
 
   m <- xgboost::xgboost(data = xgb_train,
                         verbose = 0,
-                        booster = "dart",
-                        objective = xgboost.sera,
+                        objective = custom.xgboost.sera,
+                        nrounds = nrounds,
                         ...
   )
 
@@ -247,6 +249,7 @@ wf.GradientTreeBoost <- function(formula, train, test,...){
 #' @param formula A \code{formula} object.
 #' @param train \code{data.frame} or \code{tibble} object with the training set.
 #' @param test \code{data.frame} or \code{tibble} object with the test set.
+#' @param nrounds A number. Number of boosters to train.
 #' @param ... Additional parameters which can be passed into internal model.
 #'
 #' @return A \code{list} containing trues, predictions and execution time (in seconds).
@@ -273,7 +276,7 @@ wf.GradientTreeBoost <- function(formula, train, test,...){
 #' res
 #' }
 
-wf.LGBM <- function(formula, train, test, ...){
+wf.LGBM <- function(formula, train, test, nrounds, ...){
 
   t <- formula[[2]]
 
@@ -297,8 +300,8 @@ wf.LGBM <- function(formula, train, test, ...){
                           label = label_train,
                           obj = "regression",
                           verbose = -1,
-                          boosting = "dart",
                           params = pars,
+                          nrounds,
                           min_data = min_data)
 
   end_train_time <- Sys.time()
@@ -327,12 +330,13 @@ wf.LGBM <- function(formula, train, test, ...){
 #' @param formula A \code{formula} object.
 #' @param train \code{data.frame} or \code{tibble} object with the training set.
 #' @param test \code{data.frame} or \code{tibble} object with the test set.
+#' @param nrounds A number. Number of boosters to train.
 #' @param ... Additional parameters which can be passed into internal model.
 #'
 #' @return A \code{list} containing trues, predictions and execution time (in seconds).
 #' @export
 #'
-#' @details Calls \code{\link{lgbm.sera}} as \code{objective}.
+#' @details Calls \code{\link{custom.lgbm.sera}} as \code{objective}.
 #'
 #' @examples
 #' \dontrun{
@@ -356,7 +360,7 @@ wf.LGBM <- function(formula, train, test, ...){
 #' res
 #' }
 
-wf.LGBM_SERA <- function(formula, train, test, ...){
+wf.LGBM_SERA <- function(formula, train, test, nrounds, ...){
 
   t <- formula[[2]]
 
@@ -378,10 +382,10 @@ wf.LGBM_SERA <- function(formula, train, test, ...){
 
   m <- lightgbm::lightgbm(data = lgbm_train,
                           label = label_train,
-                          obj = lgbm.sera,
+                          obj = custom.lgbm.sera,
                           verbose = -1,
-                          boosting = "dart",
                           params = pars,
+                          nrounds = nrounds,
                           min_data = min_data)
 
   end_train_time <- Sys.time()
