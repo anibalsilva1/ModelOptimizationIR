@@ -2,7 +2,7 @@
 % Please edit documentation in R/custom_loss_functions.R
 \name{custom.lgbm.sera}
 \alias{custom.lgbm.sera}
-\title{Custom SERA loss function adaptation for Light GBM.}
+\title{Custom SERA loss function adaptation for LightGBM.}
 \usage{
 custom.lgbm.sera(preds, dtrain)
 }
@@ -12,11 +12,44 @@ custom.lgbm.sera(preds, dtrain)
 \item{dtrain}{A \code{lgb.Dataset} object.}
 }
 \value{
-Returns a list containing the gradient and the hessian of SERA.
+Returns a \code{list} containing the gradient and the hessian of SERA.
 }
 \description{
 Determines the gradient statistics of SERA to be used in
 LGBM algorithm as a custom loss function.
+}
+\examples{
+library(IRon)
+library(lightgbm)
+library(dplyr)
+
+data("NO2Emissions")
+
+n <- nrow(NO2Emissions)
+s <- sample(1:n, size = n*0.8)
+
+formula <- LNO2 ~ .
+train <- NO2Emissions \%>\% dplyr::slice(s)
+test <- NO2Emissions \%>\% dplyr::slice(-s)
+
+train_m <- data.matrix(dplyr::select(train, -LNO2))
+test_m <- data.matrix(dplyr::select(test, -LNO2))
+
+labels_train <- train$LNO2
+
+I <- 1000
+phi <- phi(labels_train)
+
+steps <- seq(0, 1, 1/I)
+sigma <- sigma(phis=phi, steps=steps)
+
+lgbm_dtrain <- lgb.Dataset(data = train_m, label = labels_train, weight = sigma)
+
+params <- list(objective=custom.lgbm.sera, max_depth=5, eta=10^{-1}, num_leaves=5)
+
+lgbm.model <- lightgbm(data=lgbm_dtrain, nrounds = 100, params = params, verbose = -1)
+preds.lgbm <- predict(lgbm.model, test_m)
+
 }
 \references{
 https://github.com/microsoft/LightGBM/blob/master/R-package/tests/testthat/test_custom_objective.R

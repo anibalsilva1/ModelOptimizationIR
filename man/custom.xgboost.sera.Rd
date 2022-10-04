@@ -12,13 +12,46 @@ custom.xgboost.sera(preds, dtrain)
 \item{dtrain}{\code{xgb.DMatrix} object.}
 }
 \value{
-Returns a \code{list with the following elements:
+Returns a \code{list} containing the gradient and the hessian of SERA.
 }
 \description{
 Determines the gradient statistics of SERA to be used in
 XGBoost algorithm as a custom loss function.
 }
 \examples{
+
+library(IRon)
+library(xgboost)
+library(dplyr)
+
+data("NO2Emissions")
+
+n <- nrow(NO2Emissions)
+s <- sample(1:n, size = n*0.8)
+
+formula <- LNO2 ~ .
+train <- NO2Emissions \%>\% dplyr::slice(s)
+test <- NO2Emissions \%>\% dplyr::slice(-s)
+
+train_m <- data.matrix(dplyr::select(train, -LNO2))
+test_m <- data.matrix(dplyr::select(test, -LNO2))
+
+labels_train <- train$LNO2
+labels_test <- test$LNO2
+
+I <- 1000
+phi <- phi(labels_train)
+
+steps <- seq(0, 1, 1/I)
+sigma <- sigma(phis=phi, steps=steps)
+
+xgb_dtrain <- xgb.DMatrix(data = train_m, label = labels_train, weight = sigma)
+xgb_dtest <- xgb.DMatrix(data = test_m, label = labels_test)
+
+params <- list(objective=custom.xgboost.sera, max_depth=5, eta=10^{-1})
+
+xgb.model <- xgboost(data=xgb_dtrain, nrounds = 100, params = params, verbose = 0)
+preds.xgb <- predict(xgb.model, xgb_dtest)
 
 }
 \references{
