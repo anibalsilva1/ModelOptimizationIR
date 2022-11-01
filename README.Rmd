@@ -26,45 +26,41 @@ devtools::install_github("anibalsilva1/ModelOptimizationIR")
 
 ## Example
 
-Usage example on SERA evaluation:
+Usage example of SERA as a loss function to infer extreme values:
 
 ```{r example}
 library(ModelOptimizationIR)
-
+library(xgboost)
 library(dplyr)
-library(rpart)
 library(IRon)
 
 data("NO2Emissions")
-
 n <- nrow(NO2Emissions)
 s <- sample(1:n, size = n*0.8)
 
+I = 1000
+steps <- seq(0, 1, 1/I)
+
 formula <- LNO2 ~ .
-train <- NO2Emissions %>% slice(s)
-test <- NO2Emissions %>% slice(-s)
+train <- NO2Emissions %>% dplyr::slice(s)
+test <- NO2Emissions %>% dplyr::slice(-s)
 
-p.ctrl <- phi.control(train$LNO2)
-steps <- seq(0, 1, 0.001)
+y <- train$LNO2
 
-model <- rpart(formula, train)
-preds <- predict(model, test)
+control.points <- matrix(c(1.1, 0, 0, 3.7, 0, 0, 5, 1, 0), byrow = TRUE, ncol=3)
+ph.ctrl <- phi.control(y = y, method = "range", control.pts = control.points)
+phi <- phi(y = y, phi.parms = ph.ctrl)
+sigma <- sigma(phis = phi, steps = steps)
 
+# If you want to add some model parameters
+params <- list(max_depth=5, eta = 10^{-1})
 
-trues <- test$LNO2
-
-phi <- phi(trues, p.ctrl)
-sigma <- sigma(phi, steps)
-
-
-sera_num <- sera_numerical(trues=trues, preds=preds, sigmas=sigma)
-sera_num
-
-# Compare with SERA evaluated from trapezoidal rule
-sera_trap <- sera(trues=trues, preds=preds, phi.trues=phi)
-sera_trap
-
-
+res <- XGBoost.sera(formula = formula,
+                    train = train,
+                    test = test,
+                    sigma = sigma,
+                    parameters = params)
+res
 ```
 
 ## Citation
